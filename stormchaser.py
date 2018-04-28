@@ -10,6 +10,74 @@ class StormChaserTest(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Chrome()
 
+    def test_searchTagNotLoggedIn(self):
+        search = "tornado"
+        driver = self.driver
+        driver.maximize_window()
+        driver.get("http://codechaser8310.pythonanywhere.com/blog/home")
+        time.sleep(2)
+        elem = driver.find_element_by_name("search")
+        elem.send_keys(search)
+        time.sleep(2)
+        elem.send_keys(Keys.RETURN)
+        time.sleep(3)
+        assert "http://codechaser8310.pythonanywhere.com/blog/blog_search/?search=tornado" in driver.current_url
+        time.sleep(2)
+
+    def test_searchTagLoggedIn(self):
+        search = "tornado"
+        user = "instructor"
+        pwd = "instructor1a"
+        driver = self.driver
+        driver.maximize_window()
+        driver.get("http://codechaser8310.pythonanywhere.com/blog/accounts/login")
+        time.sleep(2)
+        elem = driver.find_element_by_name("username")
+        elem.send_keys(user)
+        time.sleep(2)
+        elem = driver.find_element_by_name("password")
+        elem.send_keys(pwd)
+        time.sleep(2)
+        elem.send_keys(Keys.RETURN)
+        time.sleep(2)
+        elem = driver.find_element_by_name("search")
+        elem.send_keys(search)
+        time.sleep(2)
+        elem.send_keys(Keys.RETURN)
+        time.sleep(3)
+        assertion = "Storm Chasers Hub"
+        title = driver.title.__str__()
+        assert assertion == title, "Take you to Blog page"
+        assert "http://codechaser8310.pythonanywhere.com/blog/blog_search/?search=tornado" in driver.current_url
+        time.sleep(2)
+
+    def test_LearnMoreButton(self):
+        driver = self.driver
+        driver.maximize_window()
+        driver.get("http://codechaser8310.pythonanywhere.com/blog/home")
+        time.sleep(2)
+        python_button = driver.find_element_by_xpath("(//a[contains(@class,'btn btn-primary btn-lg')])")
+        python_button.click()
+        assert "http://codechaser8310.pythonanywhere.com/blog/about_us/" in driver.current_url
+        time.sleep(2)
+
+    def test_loginToAdminSiteSuccessfully(self):
+        user = "instructor"
+        pwd = "instructor1a"
+        driver = self.driver
+        driver.maximize_window()
+        driver.get("http://codechaser8310.pythonanywhere.com/admin")
+        time.sleep(2)
+        elem = driver.find_element_by_id("id_username")
+        elem.send_keys(user)
+        time.sleep(3)
+        elem = driver.find_element_by_id("id_password")
+        elem.send_keys(pwd)
+        time.sleep(3)
+        elem.send_keys(Keys.RETURN)
+        assert "http://codechaser8310.pythonanywhere.com/admin/" in driver.current_url
+        time.sleep(3)
+
     def test_loginToAdminSiteUnSuccessfully(self):
         user = "instructor"
         pwd = "instructor1"
